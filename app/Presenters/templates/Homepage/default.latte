@@ -13,7 +13,7 @@
 			
 				<td><p>{if $empl->state==0}Работает{else}Уволен{/if}</p></td>		
 				<td><p><a n:href="Employee:edit $empl->id">Редактировать</a></p></td>	
-				<td><p><a href="#">Удалить</a></p></td>
+				<td><p><a n:href="delete $empl->id">Удалить</a></p></td>
 			</tr>	
 		</tbody>
 	</table>

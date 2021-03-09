@@ -33,6 +33,7 @@ use Nette;
 			$this->error('Работник не найден');
 		}
 		$empl->delete();
+		$this->redirect('default');
 	}
 
 	
