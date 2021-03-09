@@ -26,5 +26,14 @@ use Nette;
 
 	}
 
+	public function actionDelete(int $id):void{
+		$empl = $this->database->table('employee')->get($id);
+
+		if(!$empl){
+			$this->error('Работник не найден');
+		}
+		$empl->delete();
+	}
+
 	
 }
