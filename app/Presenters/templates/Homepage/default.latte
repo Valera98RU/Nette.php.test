@@ -1,0 +1,21 @@
+{* This is the welcome page, you can delete it *}
+
+{block content}
+	<h1 n:block="title">Таблица сотрудников</h1>
+	<table>
+		<tbody n:foreach="$employee as $empl">
+			<tr>
+				<td><a n:href="Employee:edit $empl->id">{$empl->name}</a></td>	
+			
+				<td><p>{$empl->position->name_position}</p></td>
+			
+				<td><p n:if="$empl->state==0">{$empl->date_employment|date:'j F, Y'}</p></td>
+			
+				<td><p>{if $empl->state==0}Работает{else}Уволен{/if}</p></td>		
+				<td><p><a n:href="Employee:edit $empl->id">Редактировать</a></p></td>	
+				<td><p><a href="#">Удалить</a></p></td>
+			</tr>	
+		</tbody>
+	</table>
+{/block}
+

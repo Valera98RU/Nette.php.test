@@ -1,0 +1,23 @@
+{block content}
+    <p><a n:href="Homepage:default">вернуться к таблице</a></p>
+    <table>
+        <tbody>
+            <tr>
+                <td><p>{$empl->name}</p></td>
+            </tr>
+            <tr>
+                <td><p>{$empl->position->name_position}</p></td>
+            </tr>
+            <tr>
+                <td><p n:if="$empl->state==0">{$empl->date_employment|date:"j F, Y" }</p></td>
+            </tr>
+            <tr>
+                <td><p >{if $empl->state==0}Работает{else}Уволен{/if}</p></td>
+            </tr>
+            <tr>
+                <td><a n:href="edit $empl->id">Редактировать</a></td>
+            </tr>
+            
+        </tbody>
+    </table>
+{/block}
