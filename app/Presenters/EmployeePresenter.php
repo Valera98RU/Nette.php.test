@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 
 class EmployeePresenter extends Nette\Application\UI\Presenter
 {
-    private Nette\Database\Explorer $database;
+    private  $database;
     private $state = array(
         "0"=>"Работает",
         "1"=>"Уволен"

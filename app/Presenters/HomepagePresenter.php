@@ -9,7 +9,7 @@ use Nette;
 
  class HomepagePresenter extends Nette\Application\UI\Presenter
  {
-	private Nette\Database\Explorer $database;
+	private     $database;
 
 	public function __construct(Nette\Database\Explorer $database)
 	{

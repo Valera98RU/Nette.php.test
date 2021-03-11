@@ -4,12 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit42ee277a878be3c9e8a460e4d7561bcf
+class ComposerStaticInit83b4e10e110aa717681400b435beb4ef
 {
     public static $files = array (
         '9b38cf48e83f5d8f60375221cd213eee' => __DIR__ . '/..' . '/phpstan/phpstan/bootstrap.php',
         'd507e002f7fce7f0c6dbf1f22edcb902' => __DIR__ . '/..' . '/tracy/tracy/src/Tracy/functions.php',
-        'a1d067aa2e53d6b47171c03cfc0ea5be' => __DIR__ . '/..' . '/nette/safe-stream/src/loader.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -43,6 +42,7 @@ class ComposerStaticInit42ee277a878be3c9e8a460e4d7561bcf
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Latte\\Attributes\\TemplateFilter' => __DIR__ . '/..' . '/latte/latte/src/Latte/attributes.php',
         'Latte\\Attributes\\TemplateFunction' => __DIR__ . '/..' . '/latte/latte/src/Latte/attributes.php',
         'Latte\\Bridges\\Tracy\\BlueScreenPanel' => __DIR__ . '/..' . '/latte/latte/src/Bridges/Tracy/BlueScreenPanel.php',
@@ -500,9 +500,9 @@ class ComposerStaticInit42ee277a878be3c9e8a460e4d7561bcf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit42ee277a878be3c9e8a460e4d7561bcf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit42ee277a878be3c9e8a460e4d7561bcf::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit42ee277a878be3c9e8a460e4d7561bcf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit83b4e10e110aa717681400b435beb4ef::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit83b4e10e110aa717681400b435beb4ef::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit83b4e10e110aa717681400b435beb4ef::$classMap;
 
         }, null, ClassLoader::class);
     }

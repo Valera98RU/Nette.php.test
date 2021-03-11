@@ -10,11 +10,11 @@ use Nette\Http;
 use Tracy\ILogger;
 
 
-final class ErrorPresenter implements Nette\Application\IPresenter
+final class ErrorPresenter
 {
 	use Nette\SmartObject;
 
-	private ILogger $logger;
+	private  $logger;
 
 
 	public function __construct(ILogger $logger)
@@ -23,7 +23,7 @@ final class ErrorPresenter implements Nette\Application\IPresenter
 	}
 
 
-	public function run(Nette\Application\Request $request): Nette\Application\IResponse
+	public function run(Nette\Application\Request $request)
 	{
 		$e = $request->getParameter('exception');
 

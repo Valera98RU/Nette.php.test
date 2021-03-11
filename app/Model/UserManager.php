@@ -11,7 +11,7 @@ use Nette\Security\Passwords;
 /**
  * Users management.
  */
-final class UserManager implements Nette\Security\Authenticator
+final class UserManager
 {
 	use Nette\SmartObject;
 
@@ -24,9 +24,9 @@ final class UserManager implements Nette\Security\Authenticator
 		COLUMN_ROLE = 'role';
 
 
-	private Nette\Database\Explorer $database;
+	private  $database;
 
-	private Passwords $passwords;
+	private $passwords;
 
 
 	public function __construct(Nette\Database\Explorer $database, Passwords $passwords)
@@ -40,10 +40,10 @@ final class UserManager implements Nette\Security\Authenticator
 	 * Performs an authentication.
 	 * @throws Nette\Security\AuthenticationException
 	 */
-	public function authenticate(string $username, string $password): Nette\Security\SimpleIdentity
+	public function authenticate(string $user, string $password): Nette\Security\SimpleIdentity
 	{
 		$row = $this->database->table(self::TABLE_NAME)
-			->where(self::COLUMN_NAME, $username)
+			->where(self::COLUMN_NAME, $user)
 			->fetch();
 
 		if (!$row) {

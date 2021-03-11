@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace App\Forms;
 
@@ -13,9 +12,9 @@ final class SignInFormFactory
 {
 	use Nette\SmartObject;
 
-	private FormFactory $factory;
+	private $factory;
 
-	private User $user;
+	private $user;
 
 
 	public function __construct(FormFactory $factory, User $user)
