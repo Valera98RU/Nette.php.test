@@ -1,11 +1,32 @@
 {* This is the welcome page, you can delete it *}
+{block script}
 
+{/block}
+}
 {block content}
 	<h1 n:block="title">Таблица сотрудников</h1>
-	<table>
-		<tbody n:foreach="$employee as $empl">
+	<div>
+		{control searchForm}
+	</div>
+
+
+
+		{snippet table_body}
+			<table class="table">
+			<thead class="thead-dark">
 			<tr>
-				<td><a n:href="Employee:edit $empl->id">{$empl->name}</a></td>	
+				<td>ФИО</td>
+				<td>Должность</td>
+				<td>Дата трудоустройства</td>
+				<td>Статус</td>
+			</tr>
+			</thead>
+
+
+			<tbody id="table_body" >
+
+			<tr n:foreach="$employee as $empl" >
+				<td><a n:href="Employee:show $empl->id">{$empl->name}</a></td>
 			
 				<td><p>{$empl->position->name_position}</p></td>
 			
@@ -14,25 +35,30 @@
 				<td><p>{if $empl->state==0}Работает{else}Уволен{/if}</p></td>		
 				<td><p><a n:href="Employee:edit $empl->id">Редактировать</a></p></td>	
 				<td><p><a n:href="delete $empl->id">Удалить</a></p></td>
-			</tr>	
+			</tr>
+		{/snippet}
 		</tbody>
+
 	</table>
+
 	<div class="pagination">
 		{if !$paginator->isFirst()}
-			<a n:href="default, 1">First</a>
+			<a n:href="default, 1">Первый</a>
 			&nbsp;|&nbsp;
-			<a n:href="default, $paginator->page-1">Previous</a>
+			<a n:href="default, $paginator->page-1">Предидущий</a>
 			&nbsp;|&nbsp;
 		{/if}
 
-			Page {$paginator->getPage()} of {$paginator->getPageCount()}
+			Страница {$paginator->getPage()} из {$paginator->getPageCount()}
 
 	{if !$paginator->isLast()}
 			&nbsp;|&nbsp;
-			<a n:href="default, $paginator->getPage() + 1">Next</a>
+			<a n:href="default, $paginator->getPage() + 1">Далее</a>
 			&nbsp;|&nbsp;
-			<a n:href="default, $paginator->getPageCount()">Last</a>
+			<a n:href="default, $paginator->getPageCount()">Последний</a>
 		{/if}
 	</div>
+
 {/block}
+
 

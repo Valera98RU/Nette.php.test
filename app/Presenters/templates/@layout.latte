@@ -19,7 +19,7 @@
 </head>
 
 <body>
-	<div >
+	<div class="container">
 		<div n:foreach="$flashes as $flash" n:class="alert, 'alert-' . $flash->type">{$flash->message}</div>
 
 		{include content}
@@ -28,11 +28,15 @@
 	{block scripts}
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	<script src="https://nette.github.io/resources/js/3/netteForms.min.js"></script>
-	<script src="{$basePath}/js/main.js"></script>
+
 		<script src="{$basePath}/js/jquery.js"></script>
 		<script src="{$basePath}/js/netteForms.js"></script>
 		<script src="{$basePath}/js/nette.ajax.js"></script> {* Nette Ajax depens on jQuery *}
 		<script src="{$basePath}/js/main.js"></script>
+
+		<script>
+
+		</script>
 	{/block}
 </body>
 </html>
