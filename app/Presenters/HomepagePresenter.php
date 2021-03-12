@@ -45,36 +45,38 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
 	}
 
+    /**
+     * Удаление записи из таблицы employee
+     * @param int $id идентификатор удоляемой записи
+     * @throws Nette\Application\AbortException
+     * @throws Nette\Application\BadRequestException
+     */
 	public function actionDelete(int $id):void{
-		$empl = $this->database->table('employee')->get($id);
-
-		if(!$empl){
-			$this->error('Работник не найден');
-		}
-		$empl->delete();
+		$this->employeesLab->deleteEmployee($id);
 		$this->redirect('default');
 	}
-/*
-	public function handleSearchEmployee(string $searchString="",int $page = 1): void{
-        if($this->isAjax()){
-            $this->paginator->setPage($page);
-            $this->employee =  $this->database->table('employee')->where('employee.name LIKE ?', '%'.$searchString.'%')
-                ->page($this->paginator->getPage(), $this->paginator->getLength());
-            $this->redrawControl('table_body');
-        }
-    }
-*/
+
+    /**
+     * Строит форму поиска
+     * @return Form
+     */
     protected function createComponentSearchForm():Form{
 	    $form = new Form();
 
 	    $form->addText("searchString","");
 	    $form->addSubmit("send", "Поиск")
-            ->setHtmlAttribute('class', 'axaj');;
+            ->setHtmlAttribute('class', 'axaj');
         $form->onSuccess[] = [$this,'searchFormSucceeded'];
         return $form;
 
     }
 
+    /**
+     * Обрабатывает post запрос от формы поиска
+     * @param Form $form
+     * @param array $values
+     * @param int $page
+     */
     public function searchFormSucceeded(Form $form, array $values, int $page = 1) : void{
 	    $searchString = $values['searchString'];
 

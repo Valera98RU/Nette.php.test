@@ -4,10 +4,15 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+use App\Model\EmployeeManager;
+use App\Model\PositionManager;
 
 class EmployeePresenter extends Nette\Application\UI\Presenter
 {
     private  $database;
+    private $EmployeeLab;
+    private $PositionLab;
+    private  $errorMessage = "Работник не найден";
     private $state = array(
         "0"=>"Работает",
         "1"=>"Уволен"
@@ -16,56 +21,69 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
     public function __construct(Nette\Database\Explorer $database)
     {
         $this->database = $database;
+        $this->EmployeeLab = new EmployeeManager($this->database);
+        $this->PositionLab = new PositionManager($this->database);
     }
 
     public function renderShow(int $id):void
     {
-        $empl = $this->database->table('employee')->get($id);
+        $empl = $this->EmployeeLab->getEmployee($id);
 
         if(!$empl){
-            $this->error('Работник не найден');
+            $this->error($this->errorMessage);
         }
 
         $this->template->empl = $empl;
     }
 
-    public function actionEdit(int $emplId):void{
-        $empl = $this->database->table('employee')->get($emplId);
-        if(!$empl){
-            $this->error('Работник не найден');
-        }       
-       $data = $empl->toArray();
-       $data['date_employment']=$data['date_employment']->format('Y-m-d');
+    /**
+     * Получает данные из таблицы employee и заполняет ими форму
+     * @param int $id Идентификатор записи
+     * @throws Nette\Application\BadRequestException
+     */
+    public function actionEdit(int $id): void
+    {
+        $employee = $this->EmployeeLab->getEmployee($id);
+        if (!$employee) {
+            $this->error($this->errorMessage);
+        }
+        $data = $employee->toArray();
+        $data['date_employment'] = $data['date_employment']->format('Y-m-d');
         $this['employeeForm']->setDefaults($data);
     }
 
+    /**
+     * Обрабатывает post запрос от вормы редактирования
+     * @param Form $form
+     * @param array $values
+     * @throws Nette\Application\AbortException
+     */
     public function employeeFormSucceeded(Form $form, array $values):void{
-        $emplId = $this->getParameter('emplId');
+        $id = $values['id'];
 
-        if($emplId){
-            $employee=$this->database->table('employee')->get($emplId);
-            $employee->update($values);
+        if($id){
+            $this->EmployeeLab->editEmployee($id,$values);
         }else{
-            $employee=$this->database->table('employee')->insert($values);
+            $this->EmployeeLab->addEmployee($values);
         }
 
         $this->flashMessage('Работник отредактирован', 'успешно');
-        $this->redirect('show', $emplId);
+        $this->redirect('show', $id);
     }
-    
 
-    
+
+    /**
+     * СОздает форму редактирования записи из таблицы employee
+     * @return Form
+     */
     protected function createComponentEmployeeForm():Form{
         $form = new Form;
 
         
         $form->addText('name','Имя:')
                 ->setRequired();
-        $key = 'id';
-        $value = 'name_position';
-        $selectPositionArray = $this->database->table('position')->fetchPairs($key, $value);
-        
-        
+        $selectPositionArray = $this->PositionLab->getPositionToArray();
+
         $form->addSelect('id_position','Должность', $selectPositionArray)
                 ->setPrompt('Выбирете должность');          
                 
@@ -74,6 +92,7 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
                     
         $form->addSelect('state','Статус',$this->state)
                 ->setPrompt('Выбирете статус');
+        $form->addHidden("id");
         $form->addSubmit('send','Сохранить изменения');
         $form->onSuccess[] = [$this,'employeeFormSucceeded'];
 
