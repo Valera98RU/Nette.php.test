@@ -7,6 +7,7 @@ namespace App\Presenters;
 use Nette;
 use Nette\Application\UI\Form;
 use App\Model\EmployeeManager;
+use App\Model\PositionManager;
 
 
 
@@ -16,6 +17,11 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	public $paginator;
 	private $employee;
 	private $employeesLab;
+	private $positionLab;
+    private $state = array(
+        "0"=>"Работает",
+        "1"=>"Уволен"
+    );
 
 	public function __construct(Nette\Database\Explorer $database)
 	{
@@ -23,6 +29,8 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$this->database = $database;
 		$this->paginator = new Nette\Utils\Paginator;
         $this->employeesLab = new EmployeeManager($this->database);
+        $this->positionLab = new PositionManager($this->database);
+
 	}
 
 	public function renderDefault(int $page = 1): void
@@ -44,6 +52,12 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
         $this->template->paginator = $this->paginator;
 
 	}
+	public function handlePaginatorController(int $page=1){
+
+
+
+        $this->redrawControl('table_body');
+    }
 
     /**
      * Удаление записи из таблицы employee
@@ -87,9 +101,42 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
             $this->paginator->setItemCount($this->employeesLab->Count);
             $this->employee = $ListEmployees;
             $this->redrawControl('table_body');
-
-
     }
+
+    /**
+     * Обрабатывыает запрос от формы фильтра
+     * @param Form $form
+     * @param array $values
+     * @param int $page
+     */
+    public function filterFormSucceeded(Form $form, array $values, int $page = 1): void{
+
+        $this->paginator->setpage($page);
+
+
+        $this->employee = $this->employeesLab->searchEmployee("",$this->paginator->getPage(),10,$values);
+        $this->redrawControl('table_body');
+    }
+
+
+    /**
+     * Конструирует форму фильтра
+     * @return Form
+     */
+
+    protected function createComponentFilterForm():Form{
+        $form = new Form();
+        $selectPositionArray = $this->positionLab->getPositionToArray();
+        $form ->addSelect('id_position','Должности', $selectPositionArray)
+                    ->setPrompt('Выбирете должность');
+
+        $form->addSelect('state','Статус', $this->state)
+                    ->setPrompt("Выбирите статус");
+        $form->addSubmit('send','Применить');
+        $form->onSuccess[] = [$this,'filterFormSucceeded'];
+        return $form;
+    }
+
 
 	
 }
