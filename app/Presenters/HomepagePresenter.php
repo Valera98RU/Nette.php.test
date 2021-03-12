@@ -70,20 +70,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$this->redirect('default');
 	}
 
-    /**
-     * Строит форму поиска
-     * @return Form
-     */
-    protected function createComponentSearchForm():Form{
-	    $form = new Form();
 
-	    $form->addText("searchString","");
-	    $form->addSubmit("send", "Поиск")
-            ->setHtmlAttribute('class', 'axaj');
-        $form->onSuccess[] = [$this,'searchFormSucceeded'];
-        return $form;
-
-    }
 
     /**
      * Обрабатывает post запрос от формы поиска
@@ -92,11 +79,12 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
      * @param int $page
      */
     public function searchFormSucceeded(Form $form, array $values, int $page = 1) : void{
-	    $searchString = $values['searchString'];
+	        $searchString = $values['searchString'];
 
             $this->paginator->setPage($page);
+            unset($values['searchString']);
 
-            $ListEmployees = $this->employeesLab->searchEmployee($searchString,$this->paginator->getPage());
+            $ListEmployees = $this->employeesLab->searchEmployee($searchString,$this->paginator->getPage(),10,$values);
 
             $this->paginator->setItemCount($this->employeesLab->Count);
             $this->employee = $ListEmployees;
@@ -127,13 +115,17 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
     protected function createComponentFilterForm():Form{
         $form = new Form();
         $selectPositionArray = $this->positionLab->getPositionToArray();
+
+        $form->addText("searchString","Поиск")->setHtmlAttribute('placeholder','ФИО');
+
         $form ->addSelect('id_position','Должности', $selectPositionArray)
                     ->setPrompt('Выбирете должность');
 
         $form->addSelect('state','Статус', $this->state)
                     ->setPrompt("Выбирите статус");
-        $form->addSubmit('send','Применить');
-        $form->onSuccess[] = [$this,'filterFormSucceeded'];
+        $form->addSubmit('send','Применить')
+                ->setHtmlAttribute('class', 'axaj');
+        $form->onSuccess[] = [$this,'searchFormSucceeded'];
         return $form;
     }
 
