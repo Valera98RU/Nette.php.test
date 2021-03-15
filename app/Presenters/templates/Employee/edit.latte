@@ -1,5 +1,34 @@
 {block content}
     <h1>Редактирование работника</h1>
-    {control employeeForm}
-    
+
+
+
+    <form n:name=employeeForm class=form>
+        <div class="row">
+            {label name class=>'form-label'}
+            {input name class=>'form-control'}
+
+        </div>
+        <div  class="row">
+            {label id_position class=>'form-label'}
+            {input id_position class=>'form-control form-select form-select-lg mb-3' }
+        </div>
+        <div  class="row">
+            {label date_employment class=>'form-label'}
+            {input date_employment class=>'form-control'}
+
+
+        </div>
+        <div  class="row">
+            {label state class=>'form-label'}
+            {input state class=>'form-control form-control form-select form-select-lg mb-3'}
+
+
+        </div>
+        <div  class="row">
+            <input n:name=send class="btn btn-primary">
+        </div>
+    </form>
+
+
 {/block}

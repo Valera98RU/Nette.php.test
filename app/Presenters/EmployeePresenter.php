@@ -85,7 +85,8 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
         $selectPositionArray = $this->PositionLab->getPositionToArray();
 
         $form->addSelect('id_position','Должность', $selectPositionArray)
-                ->setPrompt('Выбирете должность');          
+                ->setPrompt('Выбирете должность');
+
                 
         $form->addText('date_employment','Дата трудоустройства')
                 ->setHtmlType('date');
