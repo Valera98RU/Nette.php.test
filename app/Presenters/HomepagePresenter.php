@@ -10,7 +10,10 @@ use App\Model\EmployeeManager;
 use App\Model\PositionManager;
 
 
-
+/**
+ * Class HomepagePresenter
+ * @package App\Presenters
+ */
 class HomepagePresenter extends Nette\Application\UI\Presenter
  {
 	private $database;
@@ -37,17 +40,12 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
 	public function renderDefault(): void
 	{
-
-
-
-
         if (!isset($this->employee)) {
 
             $this->paginator->setItemCount($this->employeesLab->getEmployeeTableCount());
             $this->employee = $this->employeesLab->searchEmployee("",$this->paginator->getPage(),$this->itemPerPage);
 
         }
-
         $this->template->employee = $this->employee;
         $this->template->paginator = $this->paginator;
 
