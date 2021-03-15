@@ -1,6 +1,0 @@
-parameters:
-
-database:
-    dsn: 'pgsql:host=127.0.0.1; dbname=test'
-    user: postgres
-    password: admin
