@@ -13,11 +13,12 @@ use App\Model\PositionManager;
 
 class HomepagePresenter extends Nette\Application\UI\Presenter
  {
-	private     $database;
-	public $paginator;
+	private $database;
+	public  $paginator;
 	private $employee;
 	private $employeesLab;
 	private $positionLab;
+	private $itemPerPage = 5;
     private $state = array(
         "0"=>"Работает",
         "1"=>"Уволен"
@@ -30,21 +31,20 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$this->paginator = new Nette\Utils\Paginator;
         $this->employeesLab = new EmployeeManager($this->database);
         $this->positionLab = new PositionManager($this->database);
+        $this->paginator->setItemsPerPage($this->itemPerPage);
 
-	}
+    }
 
-	public function renderDefault(int $page = 1): void
+	public function renderDefault(): void
 	{
-	    $this->paginator->setPage($page); // the number of the current page (numbered from 1)
-        $this->paginator->setItemsPerPage(10); // the number of records per page
+
+
+
 
         if (!isset($this->employee)) {
 
             $this->paginator->setItemCount($this->employeesLab->getEmployeeTableCount());
-            $this->employee = $this->employeesLab->searchEmployee("",$this->paginator->getPage(),$this->paginator->getLength());
-
-
-
+            $this->employee = $this->employeesLab->searchEmployee("",$this->paginator->getPage(),$this->itemPerPage);
 
         }
 
@@ -54,8 +54,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	}
 	public function handlePaginatorController(int $page=1){
 
-
-
+        $this->paginator->setPage($page);
         $this->redrawControl('table_body');
     }
 
@@ -76,36 +75,18 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
      * Обрабатывает post запрос от формы поиска
      * @param Form $form
      * @param array $values
-     * @param int $page
      */
-    public function searchFormSucceeded(Form $form, array $values, int $page = 1) : void{
+    public function searchFormSucceeded(Form $form, array $values) : void{
+
 	        $searchString = $values['searchString'];
-
-            $this->paginator->setPage($page);
             unset($values['searchString']);
-
-            $ListEmployees = $this->employeesLab->searchEmployee($searchString,$this->paginator->getPage(),10,$values);
-
+            $ListEmployees = $this->employeesLab->searchEmployee($searchString,$this->paginator->getPage(),$this->itemPerPage,$values);
             $this->paginator->setItemCount($this->employeesLab->Count);
+            $this->paginator->setPage(1);
             $this->employee = $ListEmployees;
             $this->redrawControl('table_body');
+
     }
-
-    /**
-     * Обрабатывыает запрос от формы фильтра
-     * @param Form $form
-     * @param array $values
-     * @param int $page
-     */
-    public function filterFormSucceeded(Form $form, array $values, int $page = 1): void{
-
-        $this->paginator->setpage($page);
-
-
-        $this->employee = $this->employeesLab->searchEmployee("",$this->paginator->getPage(),10,$values);
-        $this->redrawControl('table_body');
-    }
-
 
     /**
      * Конструирует форму фильтра
@@ -119,10 +100,10 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
         $form->addText("searchString","Поиск")->setHtmlAttribute('placeholder','ФИО');
 
         $form ->addSelect('id_position','Должности', $selectPositionArray)
-                    ->setPrompt('Выбирете должность');
+                ->setPrompt('Выбирете должность');
 
         $form->addSelect('state','Статус', $this->state)
-                    ->setPrompt("Выбирите статус");
+                ->setPrompt("Выбирите статус");
         $form->addSubmit('send','Применить')
                 ->setHtmlAttribute('class', 'axaj');
         $form->onSuccess[] = [$this,'searchFormSucceeded'];

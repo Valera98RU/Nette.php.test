@@ -6,7 +6,29 @@
 {block content}
 	<h1 n:block="title">Таблица сотрудников</h1>
 	<div>
-		{control filterForm}
+
+		<form n:name=filterForm class=form>
+			<table class=" filterFormTable container" >
+				<thead >
+					<tr  class="">
+						<td class="col-4">
+							<input n:name=searchString class="form-control"/>
+
+						</td>
+						<td class="col">
+							<select n:name=id_position class="form-control"></select>
+						</td>
+						<td class="col">
+							<select n:name=state class="form-control"></select>
+						</td>
+						<td class="col">
+							<input n:name=send class="btn btn-default">
+						</td>
+					</tr>
+
+				</thead>
+			</table>
+		</form>
 	</div>
 
 

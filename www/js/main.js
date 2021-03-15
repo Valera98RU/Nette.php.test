@@ -8,5 +8,10 @@ function clearTableEmployee(){
 
 }
 
+function displayFilter(){
+    document.getElementById('extendedFilter').style.display="block";
+
+}
+
 
 
