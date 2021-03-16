@@ -1,3 +1,9 @@
+.DS_Store
+.idea
+composer.lock
+vendor
 temp
 log
-vendor
+config/local.neon
+.phpunit.result.cache
+/vendor/
