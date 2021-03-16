@@ -27,13 +27,13 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
 
     public function renderShow(int $id):void
     {
-        $empl = $this->EmployeeLab->getEmployee($id);
+        $employee = $this->EmployeeLab->getEmployee($id);
 
-        if(!$empl){
+        if(!$employee){
             $this->error($this->errorMessage);
         }
 
-        $this->template->empl = $empl;
+        $this->template->empl = $employee;
     }
 
     /**
