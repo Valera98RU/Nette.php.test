@@ -23,6 +23,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	private $employeesLab;
 	private $positionLab;
 	private $itemPerPage = 5;
+
     private $state = array(
         "0"=>"Работает",
         "1"=>"Уволен"
@@ -36,6 +37,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
         $this->employeesLab = new EmployeeManager($this->database);
         $this->positionLab = new PositionManager($this->database);
         $this->paginator->setItemsPerPage($this->itemPerPage);
+        $storage = new Nette\Caching\Storages\FileStorage('../temp');
     }
 
 	public function renderDefault(): void
@@ -52,6 +54,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
         $this->template->paginator = $this->paginator;
 
 	}
+
 	public function handleRedraw(array $ids){
 
 	    $this->redrawView();
@@ -86,11 +89,6 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
         $this->renderDefault();
     }
 
-    public function tableFormSucceeded(Form $form, array $value):void{
-	    $this->employeesLab->getEmployee(1);
-
-	    $this->redrawView();
-    }
 
     public function createComponentTableForm():Form{
 	    $form = new Form();

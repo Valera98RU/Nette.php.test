@@ -30,6 +30,7 @@
 		"nette/utils": "^3.2",
 		"latte/latte": "^2.5",
 		"tracy/tracy": "^2.6"
+
 	},
 	"require-dev": {
 		"dg/adminer-custom": "^1.25",
