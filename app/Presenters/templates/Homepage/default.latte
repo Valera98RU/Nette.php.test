@@ -1,12 +1,10 @@
 {* This is the welcome page, you can delete it *}
-{block script}
 
-{/block}
 }
 {block content}
 	<h1 n:block="title">Таблица сотрудников</h1>
-	<div>
 
+	<div>
 		<form n:name=filterForm class=form>
 			<table class=" filterFormTable container" >
 				<thead >
@@ -22,51 +20,54 @@
 							<select n:name=state class="form-control"></select>
 						</td>
 						<td class="col">
-							<input n:name=send class="btn btn-default">
+							<input n:name=send class="btn btn-primary ajax">
 						</td>
 					</tr>
 				</thead>
 			</table>
 		</form>
 	</div>
+	{snippet table_body}
 
-		{snippet table_body}
-			<table class="table">
-			<thead class="thead-dark">
-			<tr>
-				<td>ФИО</td>
-				<td>Должность</td>
-				<td>Дата трудоустройства</td>
-				<td>Статус</td>
-			</tr>
-			</thead>
+			<table class="table ajax">
+				<thead class="thead-dark">
+					<tr>
+						<td>#</td>
+						<td>ФИО</td>
+						<td>Должность</td>
+						<td>Дата трудоустройства</td>
+						<td>Статус</td>
+						<td></td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody id="table_body" >
 
+					<tr n:foreach="$employees as $employee" >
+						<td> <input name="DeleteCheckbox" type="checkbox" id="DeleteCheckbox" onchange="DisableVisibleDeleteButton()" value={$employee->id}></td>
 
-			<tbody id="table_body" >
+						<td><a n:href="Employee:show $employee->id">{$employee->name}</a></td>
 
-			<tr n:foreach="$employee as $empl" >
-				<td><a n:href="Employee:show $empl->id">{$empl->name}</a></td>
-			
-				<td><p>{$empl->position->name_position}</p></td>
-			
-				<td><p n:if="$empl->state==0">{$empl->date_employment|date:'j F, Y'}</p></td>
-			
-				<td><p>{if $empl->state==0}Работает{else}Уволен{/if}</p></td>		
-				<td><p><a n:href="Employee:edit $empl->id">Редактировать</a></p></td>	
-				<td><p><a n:href="delete $empl->id">Удалить</a></p></td>
-			</tr>
+						<td><p>{$employee->position->name_position}</p></td>
 
-		</tbody>
+						<td><p n:if="$employee->state==0">{$employee->date_employment|date:'j F, Y'}</p></td>
 
-	</table>
+						<td><p>{if $employee->state==0}Работает{else}Уволен{/if}</p></td>
+						<td><p><a n:href="Employee:edit $employee->id">Редактировать</a></p></td>
+						<td><p><a n:href="delete $employee->id">Удалить</a></p></td>
+					</tr>
+				</tbody>
+			</table>
 
+		<a  role="button" n:href="redraw!"class="btn btn-primary ajax" onclick="deleteSelectionEmployee()"  style="display: none" id="ComboDeleteButton" >Удалить выбранных</a>
 
-
-	<div class="pagination ajax">
+	{/snippet}
+	{snippet paginator}
+	<div class="pagination">
 		{if !$paginator->isFirst()}
-			<a n:href="PaginatorController! 1">Первый</a>
+			<a class="ajax" n:href="PaginatorController! 1">Первый</a>
 			&nbsp;|&nbsp;
-			<a n:href="PaginatorController! $paginator->getPage()-1">Предидущий</a>
+			<a class="ajax"  n:href="PaginatorController! $paginator->getPage()-1">Предидущий</a>
 			&nbsp;|&nbsp;
 		{/if}
 
@@ -74,13 +75,53 @@
 
 	{if !$paginator->isLast()}
 			&nbsp;|&nbsp;
-			<a n:href="PaginatorController! $paginator->getPage() + 1">Далее</a>
+			<a class="ajax" n:href="PaginatorController! $paginator->getPage() + 1">Далее</a>
 			&nbsp;|&nbsp;
-			<a n:href="PaginatorController! $paginator->getPageCount()">Последний</a>
+			<a class="ajax" n:href="PaginatorController! $paginator->getPageCount()">Последний</a>
 		{/if}
 	</div>
-	{/snippet}
+	{/snippet }
 
+
+	<script>
+		function deleteSelectionEmployee(){
+			var id = [];
+			let ArrayCheks = document.getElementsByName('DeleteCheckbox');
+			for(let i = 0 ; i < ArrayCheks.length;i++){
+				if(ArrayCheks[i].checked){
+					id.push(ArrayCheks[i].value);
+				}
+			}
+			$.getJSON(
+					{link delete!},
+					{
+			{$control->getParameterId('ids')}: id
+
+		});
+		}
+		function deleteSelectionEmpl(){
+
+			var id = [];
+
+			let checkIterator=0;
+			let ArrayCheks = document.getElementsByName('DeleteCheckbox');
+			for(let i = 0 ; i < ArrayCheks.length;i++){
+				if(ArrayCheks[i].checked){
+					id.push(ArrayCheks[i].value);
+				}
+			}
+
+			$.nette.ajax(
+					{
+						url: {link delete!},
+						data: {"ids":id},
+						type: 'get',
+						dataType: 'json'
+					}
+			);
+			alert(requestData);
+		}
+	</script>
 {/block}
 
 

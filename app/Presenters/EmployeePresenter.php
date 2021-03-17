@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Caching\Cache;
 use App\Model\EmployeeManager;
 use App\Model\PositionManager;
 
@@ -23,6 +24,7 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
         $this->database = $database;
         $this->EmployeeLab = new EmployeeManager($this->database);
         $this->PositionLab = new PositionManager($this->database);
+        $cache = new Cache($storage, 'Full Html Pages');
     }
 
     public function renderShow(int $id):void
@@ -33,7 +35,8 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
             $this->error($this->errorMessage);
         }
 
-        $this->template->empl = $employee;
+        $this->template->employee = $employee;
+        $this->template->title = "Карточка работника";
     }
 
     /**
@@ -50,6 +53,7 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
         $data = $employee->toArray();
         $data['date_employment'] = $data['date_employment']->format('Y-m-d');
         $this['employeeForm']->setDefaults($data);
+        $this->template->title="Редактирование сотрудника";
     }
 
     /**

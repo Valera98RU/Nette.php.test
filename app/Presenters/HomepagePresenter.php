@@ -8,6 +8,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use App\Model\EmployeeManager;
 use App\Model\PositionManager;
+use Tracy\Debugger;
 
 
 /**
@@ -26,34 +27,40 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
         "0"=>"Работает",
         "1"=>"Уволен"
     );
+    private $cache;
 
 	public function __construct(Nette\Database\Explorer $database)
 	{
-
 		$this->database = $database;
 		$this->paginator = new Nette\Utils\Paginator;
         $this->employeesLab = new EmployeeManager($this->database);
         $this->positionLab = new PositionManager($this->database);
         $this->paginator->setItemsPerPage($this->itemPerPage);
-
     }
 
 	public function renderDefault(): void
 	{
         if (!isset($this->employee)) {
-
             $this->paginator->setItemCount($this->employeesLab->getEmployeeTableCount());
             $this->employee = $this->employeesLab->searchEmployee("",$this->paginator->getPage(),$this->itemPerPage);
-
         }
-        $this->template->employee = $this->employee;
+        $this->employee->page($this->paginator->getPage(),$this->itemPerPage);
+
+        $this->template->employees = $this->employee;
+
+        $this->template->title = "Таблицы сотрудников";
         $this->template->paginator = $this->paginator;
 
 	}
-	public function handlePaginatorController(int $page=1){
+	public function handleRedraw(array $ids){
 
+	    $this->redrawView();
+
+    }
+
+	public function handlePaginatorController(int $page=1){
         $this->paginator->setPage($page);
-        $this->redrawControl('table_body');
+        $this->redrawView();
     }
 
     /**
@@ -67,7 +74,32 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$this->redirect('default');
 	}
 
+    /**
+     * Удаление нескольких сотрудников
+     * @param array $ids
+     * @throws Nette\Application\AbortException
+     */
+	public function handleDelete(array $ids){
+        for($i=0;$i<count($ids);$i++){
+            $this->employeesLab->deleteEmployee(intval($ids[$i]));
+        }
+        $this->renderDefault();
+    }
 
+    public function tableFormSucceeded(Form $form, array $value):void{
+	    $this->employeesLab->getEmployee(1);
+
+	    $this->redrawView();
+    }
+
+    public function createComponentTableForm():Form{
+	    $form = new Form();
+
+        $form->addCheckboxList('DeleteCheckbox','',[1=>1]);
+        $form->addSubmit('send','Удалить выбранное');
+        $form->onSuccess[] = [$this,'tableFormSucceeded'];
+        return $form;
+    }
 
     /**
      * Обрабатывает post запрос от формы поиска
@@ -75,15 +107,13 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
      * @param array $values
      */
     public function searchFormSucceeded(Form $form, array $values) : void{
-
-	        $searchString = $values['searchString'];
-            unset($values['searchString']);
-            $ListEmployees = $this->employeesLab->searchEmployee($searchString,$this->paginator->getPage(),$this->itemPerPage,$values);
-            $this->paginator->setItemCount($this->employeesLab->Count);
-            $this->paginator->setPage(1);
-            $this->employee = $ListEmployees;
-            $this->redrawControl('table_body');
-
+        $searchString = $values['searchString'];
+        unset($values['searchString']);
+        $ListEmployees = $this->employeesLab->searchEmployee($searchString,$this->paginator->getPage(),$this->itemPerPage,$values);
+        $this->paginator->setItemCount($this->employeesLab->Count);
+        $this->paginator->setPage(1);
+        $this->employee = $ListEmployees;
+        $this->redrawView();
     }
 
     /**
@@ -102,12 +132,15 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
         $form->addSelect('state','Статус', $this->state)
                 ->setPrompt("Выбирите статус");
+
         $form->addSubmit('send','Применить')
-                ->setHtmlAttribute('class', 'axaj');
+                ->setHtmlAttribute('class', 'ajax');
+
         $form->onSuccess[] = [$this,'searchFormSucceeded'];
         return $form;
     }
-
-
-	
+    protected function redrawView(){
+        $this->redrawControl('table_body');
+        $this->redrawControl('paginator');
+    }
 }

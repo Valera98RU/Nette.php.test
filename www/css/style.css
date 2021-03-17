@@ -1,4 +1,4 @@
-body {
+/*body {
 	margin-top: 20px;
 }
 
@@ -9,8 +9,11 @@ h1 {
 a[href^="#error:"] {
 	background: red;
 	color: white;
-}
+}*/
 
+.bg-dark {
+	background-color: #343a40!important;
+}
 form .required label {
 	font-weight: bold;
 }
@@ -26,3 +29,4 @@ form .required label {
 .filterFormTable>tbody{
 	display:none;
 }
+

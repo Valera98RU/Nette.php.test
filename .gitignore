@@ -7,3 +7,4 @@ log
 config/local.neon
 .phpunit.result.cache
 /vendor/
+
