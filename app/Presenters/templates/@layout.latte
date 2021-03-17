@@ -44,6 +44,14 @@
 
 						{/ifset}
 				  	</span>
+					<span n:if="$isAutorizate">
+						<a  n:href="Sign:out" class="navbar-text" style="margin-left: 15px">Выйти</a>
+					</span>
+					<span n:if="!$isAutorizate">
+						<a  n:href="Sign:in" class="navbar-text" style="margin-left: 15px">Войти</a>
+					</span>
+
+
 				</div>
 
 			</div>

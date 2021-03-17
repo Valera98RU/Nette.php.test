@@ -6,6 +6,7 @@ namespace App\Presenters;
 
 use App\Forms;
 use Nette\Application\UI\Form;
+use App\Model\AuthorizationFactory;
 
 
 final class SignPresenter extends BasePresenter
@@ -22,6 +23,8 @@ final class SignPresenter extends BasePresenter
 	{
 		$this->signInFactory = $signInFactory;
 		$this->signUpFactory = $signUpFactory;
+
+
 	}
 
 
@@ -31,10 +34,11 @@ final class SignPresenter extends BasePresenter
 	protected function createComponentSignInForm(): Form
 	{
 		return $this->signInFactory->create(function (): void {
-			$this->restoreRequest($this->backlink);
-			$this->redirect('Homepage:');
+			//$this->restoreRequest($this->backlink);
+			$this->redirect('Homepage:default');
 		});
 	}
+
 
 
 	/**
@@ -43,7 +47,7 @@ final class SignPresenter extends BasePresenter
 	protected function createComponentSignUpForm(): Form
 	{
 		return $this->signUpFactory->create(function (): void {
-			$this->redirect('Homepage:');
+			$this->redirect('Homepage:default');
 		});
 	}
 

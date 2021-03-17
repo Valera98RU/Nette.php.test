@@ -4,11 +4,13 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Caching\Cache;
+
 use App\Model\EmployeeManager;
 use App\Model\PositionManager;
+use App\Model\AuthorizationFactory;
+use Tracy\Debugger;
 
-class EmployeePresenter extends Nette\Application\UI\Presenter
+class EmployeePresenter extends  BasePresenter
 {
     private  $database;
     private $EmployeeLab;
@@ -24,7 +26,15 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
         $this->database = $database;
         $this->EmployeeLab = new EmployeeManager($this->database);
         $this->PositionLab = new PositionManager($this->database);
-        $cache = new Cache($storage, 'Full Html Pages');
+
+    }
+    protected function startup()
+    {
+        parent::startup();
+        if(!$this->user->isAllowed(AuthorizationFactory::EMPLOYEE)){
+
+            $this->error('Forbidden',403);
+        }
     }
 
     public function renderShow(int $id):void
