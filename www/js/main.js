@@ -8,6 +8,24 @@ function clearTableEmployee(){
 
 }
 
+function viewUserCard(){
+    let card = document.getElementById('userCard');
+    
+    switch (card.style.display) {
+        
+        case 'block':
+            card.style.display='none';
+            break;
+        case 'none':
+            card.style.display='block';
+            break;                       
+
+    }
+
+    
+    
+}
+
 
 function DisableVisibleDeleteButton(){
 

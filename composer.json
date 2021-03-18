@@ -29,13 +29,13 @@
 		"nette/security": "^3.0",
 		"nette/utils": "^3.2",
 		"latte/latte": "^2.5",
-		"tracy/tracy": "^2.6",
+		"tracy/tracy": "^2.6"
 
 
 	},
 	"require-dev": {
 		"dg/adminer-custom": "^1.25",
-		"nette/tester": "^2.3",
+		"nette/tester": "^7.1",
 		"phpstan/phpstan-nette": "^0.12",
 		"symfony/thanks": "^1"
 	},
