@@ -31,7 +31,8 @@ class EmployeePresenter extends  BasePresenter
     protected function startup()
     {
         parent::startup();
-        if(!$this->user->isAllowed(AuthorizationFactory::EMPLOYEE)){
+        Debugger::barDump($this->getUser()->isAllowed(AuthorizationFactory::EMPLOYEE));
+        if(!$this->getUser()->isAllowed(AuthorizationFactory::EMPLOYEE)){
 
             $this->error('Forbidden',403);
         }
@@ -40,11 +41,9 @@ class EmployeePresenter extends  BasePresenter
     public function renderShow(int $id):void
     {
         $employee = $this->EmployeeLab->getEmployee($id);
-
         if(!$employee){
             $this->error($this->errorMessage);
         }
-
         $this->template->employee = $employee;
         $this->template->title = "Карточка работника";
     }

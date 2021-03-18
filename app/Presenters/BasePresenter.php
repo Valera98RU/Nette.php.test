@@ -19,5 +19,8 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->isAutorizate = $this->getUser()->isLoggedIn();
         $this->template->userRole = $this->getUser()->roles[0];
         Debugger::barDump($this->getUser());
+        Debugger::barDump($this->getUser()->getAuthorizator());
+
+
     }
 }

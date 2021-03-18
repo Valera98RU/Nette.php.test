@@ -51,6 +51,7 @@ class HomepagePresenter extends BasePresenter
         if(!$this->getUser()->isAllowed(AuthorizationFactory::HOMEPAGE)){
             $this->error('Forbidden',403);
             Debugger::barDump($this->getUser()->isAllowed(AuthorizationFactory::EMPLOYEE));
+
         }
 
         $this->template->isAutorizate = $this->getUser()->isLoggedIn();

@@ -3,6 +3,7 @@
 
 namespace App\Model;
 use Nette;
+use Tracy\Debugger;
 
 /**
  * Class AuthorizationFactory
@@ -16,7 +17,7 @@ class AuthorizationFactory
             REGISTERED = 'authenticated',
             HOMEPAGE = 'homepage',
             EMPLOYEE = 'employee',
-            VIEW = 'view',
+            VIEW = 'show',
             EDIT = 'edit',
             ADD ='add';
     /**
@@ -36,7 +37,8 @@ class AuthorizationFactory
         $acl->allow(self::GUEST,self::HOMEPAGE);
 
         $acl->allow(self::REGISTERED,[self::HOMEPAGE,self::EMPLOYEE],self::VIEW);
-        $acl->allow(self::ADMIN,$acl::ALL,[self::VIEW,self::EDIT,self::ADD]);
+        $acl->allow(self::ADMIN,[self::HOMEPAGE,self::EMPLOYEE]);
+
 
         return $acl;
     }
