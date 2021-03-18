@@ -29,4 +29,19 @@ form .required label {
 .filterFormTable>tbody{
 	display:none;
 }
+div.SignForm, div.EmployeeEditCard, div.EmployeeShowCard{
+	width: 350px;
+	position: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 25px;
+	padding: 20px;
+	box-shadow: 0 0 10px rgba(0,0,0,0.5);
+	border-radius: 15px;
+}
+div.SignForm>label{
+	width: 100%;
+}
+
+
 

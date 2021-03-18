@@ -1,13 +1,16 @@
 {block content}
+    <div class="EmployeeShowCard">
     <h1>{$title}</h1>
-    <div class="card" style="width: 30rem;">
+    <div>
         <div class="card-body">
             <h4 class="card-title">{$employee->name}</h4>
             <p  class="card-subtitle mb-2 text-muted">{$employee->position->name_position}</p>
             <p  class="card-text" n:if="$employee->state==0">{$employee->date_employment|date:"j F, Y" }</p>
             <p  class="card-text">{if $employee->state==0}Работает{else}Уволен{/if}</p>
-            <a  class="btn btn-primary" n:href="edit $employee->id">Редактировать</a>
+
+
+            <a n:if="$userRole=='admin'"  class="btn btn-primary" n:href="edit $employee->id">Редактировать</a>
         </div>
     </div>
-
+    </div>
 {/block}

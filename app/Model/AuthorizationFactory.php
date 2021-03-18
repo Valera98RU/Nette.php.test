@@ -3,7 +3,7 @@
 
 namespace App\Model;
 use Nette;
-use Tracy\Debugger;
+
 
 /**
  * Class AuthorizationFactory
@@ -17,11 +17,11 @@ class AuthorizationFactory
             REGISTERED = 'authenticated',
             HOMEPAGE = 'homepage',
             EMPLOYEE = 'employee',
-            VIEW = 'show',
+            VIEW = 'view',
             EDIT = 'edit',
-            ADD ='add';
+            ADD ='add',
+            DELETE = 'delete';
     /**
-     *
      * @return Nette\Security\Permission
      */
     public static function create():Nette\Security\Permission{
@@ -34,8 +34,6 @@ class AuthorizationFactory
         $acl->addResource(self::EMPLOYEE);
         $acl->addResource(self::HOMEPAGE);
         //allow
-        $acl->allow(self::GUEST,self::HOMEPAGE);
-
         $acl->allow(self::REGISTERED,[self::HOMEPAGE,self::EMPLOYEE],self::VIEW);
         $acl->allow(self::ADMIN,[self::HOMEPAGE,self::EMPLOYEE]);
 

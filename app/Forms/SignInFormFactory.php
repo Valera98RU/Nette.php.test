@@ -30,6 +30,7 @@ final class SignInFormFactory
 	public function create(callable $onSuccess): Form
 	{
 		$form = $this->factory->create();
+
 		$form->addText('username', 'Username:')
 			->setRequired('Please enter your username.');
 

@@ -35,9 +35,10 @@
 	},
 	"require-dev": {
 		"dg/adminer-custom": "^1.25",
-		"nette/tester": "^7.1",
+		"nette/tester": "^v1.7.2",
 		"phpstan/phpstan-nette": "^0.12",
-		"symfony/thanks": "^1"
+		"symfony/thanks": "^1",
+		"phpunit/phpunit": "^9.3.1"
 	},
 	"autoload": {
 		"psr-4": {

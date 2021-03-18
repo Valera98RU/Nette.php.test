@@ -32,19 +32,19 @@
 			<table class="table ajax">
 				<thead class="thead-dark">
 					<tr>
-						<td n:if="$userRole!='guest'">#</td>
+						<td n:if="$userRole=='admin'"></td>
 						<td>ФИО</td>
 						<td>Должность</td>
 						<td>Дата трудоустройства</td>
 						<td>Статус</td>
-						<td n:if="$userRole!='guest'"></td>
-						<td n:if="$userRole!='guest'"></td>
+						<td n:if="$userRole=='admin'"></td>
+						<td n:if="$userRole=='admin'"></td>
 					</tr>
 				</thead>
 				<tbody id="table_body" >
 
 					<tr n:foreach="$employees as $employee" >
-						<td n:if="$userRole!='guest'"> <input name="DeleteCheckbox" type="checkbox" id="DeleteCheckbox" onchange="DisableVisibleDeleteButton()" value={$employee->id}></td>
+						<td n:if="$userRole=='admin'"> <input name="DeleteCheckbox" type="checkbox" id="DeleteCheckbox" onchange="DisableVisibleDeleteButton()" value={$employee->id}></td>
 
 						<td><a n:href="Employee:show $employee->id">{$employee->name}</a></td>
 
@@ -54,8 +54,8 @@
 
 						<td><p>{if $employee->state==0}Работает{else}Уволен{/if}</p></td>
 
-						<td n:if="$userRole!='guest'"><p><a n:href="Employee:edit $employee->id">Редактировать</a></p></td>
-						<td n:if="$userRole!='guest'"><p><a n:href="delete $employee->id">Удалить</a></p></td>
+						<td n:if="$userRole=='admin'"><p><a n:href="Employee:edit $employee->id">Редактировать</a></p></td>
+						<td n:if="$userRole=='admin'"><p><a n:href="delete $employee->id">Удалить</a></p></td>
 					</tr>
 				</tbody>
 			</table>
