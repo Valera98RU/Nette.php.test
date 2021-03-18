@@ -4,14 +4,18 @@ namespace App\Presenters;
 
 use Nette;
 use Nette\Application\UI\Form;
+
 use App\Model\EmployeeManager;
 use App\Model\PositionManager;
+use App\Model\AuthorizationFactory;
+use Tracy\Debugger;
 
-class EmployeePresenter extends Nette\Application\UI\Presenter
+class EmployeePresenter extends  BasePresenter
 {
     private  $database;
     private $EmployeeLab;
     private $PositionLab;
+    private $resolution = false;
     private  $errorMessage = "Работник не найден";
     private $state = array(
         "0"=>"Работает",
@@ -23,17 +27,35 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
         $this->database = $database;
         $this->EmployeeLab = new EmployeeManager($this->database);
         $this->PositionLab = new PositionManager($this->database);
+
+    }
+    protected function startup()
+    {
+        parent::startup();
+
+        switch($this->getRequest()->parameters['action']){
+            case 'show':
+                $resolution = $this->getUser()->isAllowed(AuthorizationFactory::EMPLOYEE,AuthorizationFactory::VIEW);
+                break;
+            case 'edit':
+                $resolution = $this->getUser()->isAllowed(AuthorizationFactory::EMPLOYEE,AuthorizationFactory::EDIT);
+                break;
+        }
+
+        if(!$resolution){
+            $this->redirect("Sign:in");
+        }
+
     }
 
     public function renderShow(int $id):void
     {
         $employee = $this->EmployeeLab->getEmployee($id);
-
         if(!$employee){
             $this->error($this->errorMessage);
         }
-
-        $this->template->empl = $employee;
+        $this->template->employee = $employee;
+        $this->template->title = "Карточка работника";
     }
 
     /**
@@ -50,6 +72,7 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
         $data = $employee->toArray();
         $data['date_employment'] = $data['date_employment']->format('Y-m-d');
         $this['employeeForm']->setDefaults($data);
+        $this->template->title="Редактирование сотрудника";
     }
 
     /**
@@ -78,19 +101,14 @@ class EmployeePresenter extends Nette\Application\UI\Presenter
      */
     protected function createComponentEmployeeForm():Form{
         $form = new Form;
-
         
         $form->addText('name','Имя:')
                 ->setRequired();
         $selectPositionArray = $this->PositionLab->getPositionToArray();
-
         $form->addSelect('id_position','Должность', $selectPositionArray)
                 ->setPrompt('Выбирете должность');
-
-                
         $form->addText('date_employment','Дата трудоустройства')
                 ->setHtmlType('date');
-                    
         $form->addSelect('state','Статус',$this->state)
                 ->setPrompt('Выбирете статус');
         $form->addHidden("id");

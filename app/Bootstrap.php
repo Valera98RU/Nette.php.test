@@ -7,7 +7,7 @@ namespace App;
 use Nette\Bootstrap\Configurator;
 
 
-class Bootstrap
+class   Bootstrap
 {
 	public static function boot(): Configurator
 	{

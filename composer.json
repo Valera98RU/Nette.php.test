@@ -18,7 +18,7 @@
 		"php": ">= 7.1",
 		"nette/application": "^3.0",
 		"nette/bootstrap": "^3.0",
-		"nette/caching": "^3.0",
+		"nette/caching": "^3.1",
 		"nette/database": "^3.0.5",
 		"nette/di": "^3.0",
 		"nette/finder": "^2.5",
@@ -30,12 +30,15 @@
 		"nette/utils": "^3.2",
 		"latte/latte": "^2.5",
 		"tracy/tracy": "^2.6"
+
+
 	},
 	"require-dev": {
 		"dg/adminer-custom": "^1.25",
-		"nette/tester": "^2.3",
+		"nette/tester": "^v1.7.2",
 		"phpstan/phpstan-nette": "^0.12",
-		"symfony/thanks": "^1"
+		"symfony/thanks": "^1",
+		"phpunit/phpunit": "^9.3.1"
 	},
 	"autoload": {
 		"psr-4": {

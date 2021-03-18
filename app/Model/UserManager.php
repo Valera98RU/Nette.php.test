@@ -11,7 +11,7 @@ use Nette\Security\Passwords;
 /**
  * Users management.
  */
-final class UserManager
+final class UserManager implements Nette\Security\Authenticator
 {
 	use Nette\SmartObject;
 
@@ -24,9 +24,9 @@ final class UserManager
 		COLUMN_ROLE = 'role';
 
 
-	private  $database;
+	private $database;
 
-	private $passwords;
+	private  $passwords;
 
 
 	public function __construct(Nette\Database\Explorer $database, Passwords $passwords)
@@ -36,11 +36,14 @@ final class UserManager
 	}
 
 
-	/**
-	 * Performs an authentication.
-	 * @throws Nette\Security\AuthenticationException
-	 */
-	public function authenticate(string $user, string $password): Nette\Security\SimpleIdentity
+    /**
+     * Performs an authentication.
+     * @param string $user
+     * @param string $password
+     * @return Nette\Security\SimpleIdentity
+     * @throws Nette\Security\AuthenticationException
+     */
+	public function authenticate(string $user, string $password): Nette\Security\IIdentity
 	{
 		$row = $this->database->table(self::TABLE_NAME)
 			->where(self::COLUMN_NAME, $user)
@@ -64,10 +67,14 @@ final class UserManager
 	}
 
 
-	/**
-	 * Adds new user.
-	 * @throws DuplicateNameException
-	 */
+    /**
+     * Adds new user.
+     * @param string $username
+     * @param string $email
+     * @param string $password
+     * @throws DuplicateNameException
+     * @throws Nette\Utils\AssertionException
+     */
 	public function add(string $username, string $email, string $password): void
 	{
 		Nette\Utils\Validators::assert($email, 'email');

@@ -1,26 +1,16 @@
 {block content}
-    <h1>Карточка сотрудника</h1>
-    <p><a n:href="Homepage:default">вернуться к таблице</a></p>
+    <div class="EmployeeShowCard">
+    <h1>{$title}</h1>
     <div>
-    <table >
-        <tbody>
-            <tr>
-                <td><p>{$empl->name}</p></td>
-            </tr>
-            <tr>
-                <td><p>{$empl->position->name_position}</p></td>
-            </tr>
-            <tr>
-                <td><p n:if="$empl->state==0">{$empl->date_employment|date:"j F, Y" }</p></td>
-            </tr>
-            <tr>
-                <td><p >{if $empl->state==0}Работает{else}Уволен{/if}</p></td>
-            </tr>
-            <tr>
-                <td><a n:href="edit $empl->id">Редактировать</a></td>
-            </tr>
-            
-        </tbody>
-    </table>
+        <div class="card-body">
+            <h4 class="card-title">{$employee->name}</h4>
+            <p  class="card-subtitle mb-2 text-muted">{$employee->position->name_position}</p>
+            <p  class="card-text" n:if="$employee->state==0">{$employee->date_employment|date:"j F, Y" }</p>
+            <p  class="card-text">{if $employee->state==0}Работает{else}Уволен{/if}</p>
+
+
+            <a n:if="$userRole=='admin'"  class="btn btn-primary" n:href="edit $employee->id">Редактировать</a>
+        </div>
+    </div>
     </div>
 {/block}

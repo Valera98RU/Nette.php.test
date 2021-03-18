@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace App\Model;
 use Nette;
+use Tracy\Debugger;
 
 
 final class EmployeeManager
@@ -15,6 +16,7 @@ final class EmployeeManager
 
     public function __construct(Nette\Database\Explorer $database){
         $this->database = $database;
+
     }
 
     /**
@@ -38,7 +40,7 @@ final class EmployeeManager
         }
         $employees->order('name ASC');
         $this->Count = $employees->count();
-        $employees->page($page,$ItemsPerPage);
+
 
         return $employees;
 
@@ -57,12 +59,11 @@ final class EmployeeManager
      * @param int $id идентификатор записи
      */
     public function deleteEmployee(int $id){
-        $empl = $this->database->table('employee')->get($id);
-
-        if(!$empl){
+        $employee = $this->database->table('employee')->get($id);
+        if(!$employee){
             $this->error('Работник не найден');
         }
-        $empl->delete();
+        $employee->delete();
     }
 
     /**
@@ -71,9 +72,7 @@ final class EmployeeManager
      * @param array $value изменяемые параметры
      */
     public function editEmployee(int $id, array $value){
-
         $empl = $this->database->table('employee')->get($id);
-
         $empl->update($value);
     }
 
@@ -88,7 +87,7 @@ final class EmployeeManager
     /**
      * Запрашивает запись из таблицы employee по идентификатору
      * @param int $id идентификатор записи
-     * @return array строка записи из таблицы employee
+     * @return Nette\Database\Table\ActiveRow строка записи из таблицы employee
      */
     public function getEmployee(int $id) {
         return $this->database->table('employee')->get($id);
