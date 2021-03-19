@@ -75,7 +75,7 @@ final class UserManager implements Nette\Security\Authenticator
      * @throws DuplicateNameException
      * @throws Nette\Utils\AssertionException
      */
-	public function add(string $username, string $email, string $password): void
+	public function add(string $username, string $email, string $password): bool
 	{
 		Nette\Utils\Validators::assert($email, 'email');
 		try {
@@ -83,7 +83,9 @@ final class UserManager implements Nette\Security\Authenticator
 				self::COLUMN_NAME => $username,
 				self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
 				self::COLUMN_EMAIL => $email,
+
 			]);
+			return true;
 		} catch (Nette\Database\UniqueConstraintViolationException $e) {
 			throw new DuplicateNameException;
 		}

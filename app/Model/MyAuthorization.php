@@ -31,6 +31,7 @@ class MyAuthorization implements Nette\Security\Authorizator
         elseif($role === AuthorizationFactory::GUEST && $resource===AuthorizationFactory::HOMEPAGE){
             return false;
         }
+        elseif($role === AuthorizationFactory::REGISTERED && $resource === AuthorizationFactory::EMPLOYEE)
 
 
         return false;

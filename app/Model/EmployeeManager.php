@@ -50,38 +50,58 @@ final class EmployeeManager
      * Возвращает количество записей в таблице employee
      * @return int
      */
-    public function getEmployeeTableCount(){
+    public function getEmployeeTableCount(): int
+    {
         return $this->database->table('employee')->count();
     }
 
     /**
      * удаление записи из таблицы employee
      * @param int $id идентификатор записи
+     * @return bool
      */
-    public function deleteEmployee(int $id){
-        $employee = $this->database->table('employee')->get($id);
-        if(!$employee){
-            $this->error('Работник не найден');
+    public function deleteEmployee(?int $id): bool{
+        try {
+            $employee = $this->database->table('employee')->get($id);
+            if (!$employee) {
+                $this->error('Работник не найден');
+            }
+            $employee->delete();
+            return true;
+        }catch (\PDOException $e){
+            return false;
         }
-        $employee->delete();
+
     }
 
     /**
      * Изменяет запись в таблице employee
      * @param int $id идентификатор записи
      * @param array $value изменяемые параметры
+     * @return bool
      */
-    public function editEmployee(int $id, array $value){
-        $empl = $this->database->table('employee')->get($id);
-        $empl->update($value);
+    public function editEmployee(int $id, array $value): bool{
+        try {
+
+            $employee = $this->database->table('employee')->get($id);
+            return  $employee->update($value);
+        }catch (\PDOException $e){
+            return false;
+        }
     }
 
     /**
      * создание записи в таблице employee
      * @param array $values параметры новой записи
+     * @return int|null
      */
-    public function addEmployee(array $values){
-        $this->database->table('employee')->insert($values);
+    public function addEmployee(array $values): ?int{
+        try {
+           $id = $this->database->table('employee')->insert($values)['id'];
+            return  $id;
+        }catch (\PDOException $e){
+            return null;
+        }
     }
 
     /**
@@ -89,7 +109,9 @@ final class EmployeeManager
      * @param int $id идентификатор записи
      * @return Nette\Database\Table\ActiveRow строка записи из таблицы employee
      */
-    public function getEmployee(int $id) {
+    public function getEmployee(?int $id)
+    {
+
         return $this->database->table('employee')->get($id);
     }
 
